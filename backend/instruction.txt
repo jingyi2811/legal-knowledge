@@ -1,0 +1,27 @@
+[embedding]
+curl -X POST http://localhost:4000/embedding \
+  -H "Content-Type: application/json" \
+  -d '{"text": "This is a sample sentence to embed."}'
+
+[/embedding/upload]
+curl -X POST http://localhost:4000/embedding/upload \
+  -F "file=@sample_legal_document.pdf" \
+  -H "Content-Type: multipart/form-data"
+
+[/embedding/from-folder]
+curl -X POST http://localhost:4000/embedding/from-folder \
+  -H "Content-Type: application/json" \
+  -d '{"filePath": "/Users/jimmy/WebstormProjects/legal-knowledge/backend/doc/pdf/a.pdf"}'
+
+[/embedding/process-directory]
+curl -X POST http://localhost:4000/embedding/process-directory \
+  -H "Content-Type: application/json" \
+  -d '{"directoryPath": "/Users/jimmy/WebstormProjects/legal-knowledge/backend/doc/pdf"}'
+
+[/query]
+curl -X POST http://localhost:4000/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What is the penalty for breach of contract in Malaysia?"}'
+
+[/delete]
+curl -X DELETE http://localhost:4000/embedding/reset
