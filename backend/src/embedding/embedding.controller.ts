@@ -56,11 +56,8 @@ export class EmbeddingController implements OnModuleInit {
       const filename = `uploaded_${new Date().getTime()}.pdf`;
 
       // Break text into chunks for better semantic search
-      const chunks = this.chunkText(data.text, 3000);
+      const chunks = this.chunkText(data.text, 1000); // Reduced chunk size to mitigate context length issues
       this.logger.log(`Split document into ${chunks.length} chunks`);
-
-      // Generate embedding for full text (for backward compatibility)
-      const fullEmbedding = await this.openaiService.generateEmbedding(data.text);
 
       // Store each chunk with its own embedding
       for (let i = 0; i < chunks.length; i++) {
@@ -76,7 +73,7 @@ export class EmbeddingController implements OnModuleInit {
       }
 
       return {
-        embedding: fullEmbedding,
+        // embedding: fullEmbedding, // Removed as it can exceed token limits
         text: data.text.substring(0, 500) + '...', // Return truncated text for preview
         pages: data.numpages,
         chunks: chunks.length
@@ -90,7 +87,7 @@ export class EmbeddingController implements OnModuleInit {
   /**
    * Process a PDF file from a specific file path, chunk it, and store in Weaviate
    */
-  async processPdfFile(filePath: string): Promise<{ embedding: number[]; text: string; pages: number; chunks: number }> {
+  async processPdfFile(filePath: string): Promise<{ text: string; pages: number; chunks: number }> { // Removed embedding from return type
     try {
       // Read the file from the file system
       const fileBuffer = fs.readFileSync(filePath);
@@ -99,11 +96,8 @@ export class EmbeddingController implements OnModuleInit {
       const data = await pdfParse(fileBuffer);
 
       // Break text into chunks for better semantic search
-      const chunks = this.chunkText(data.text, 3000);
+      const chunks = this.chunkText(data.text, 1000); // Reduced chunk size to mitigate context length issues
       this.logger.log(`Split document into ${chunks.length} chunks`);
-
-      // Generate embedding for full text (for backward compatibility)
-      const fullEmbedding = await this.openaiService.generateEmbedding(data.text);
 
       // Store each chunk with its own embedding
       for (let i = 0; i < chunks.length; i++) {
@@ -119,7 +113,7 @@ export class EmbeddingController implements OnModuleInit {
       }
 
       return {
-        embedding: fullEmbedding,
+        // embedding: fullEmbedding, // Removed as it can exceed token limits
         text: data.text.substring(0, 500) + '...', // Return truncated text for preview
         pages: data.numpages,
         chunks: chunks.length
@@ -186,12 +180,12 @@ export class EmbeddingController implements OnModuleInit {
   }
 
   @Post('from-folder')
-  async processPdfFromFolder(@Body() body: { filePath: string }): Promise<{ embedding: number[]; text: string; pages: number }> {
+  async processPdfFromFolder(@Body() body: { filePath: string }): Promise<{ text: string; pages: number; chunks: number }> { // Removed embedding from return type
     return this.processPdfFile(body.filePath);
   }
 
   @Post('process-directory')
-  async processDirectory(@Body() body: { directoryPath: string }): Promise<Array<{ filename: string; embedding: number[]; text: string; pages: number; chunks: number }>> {
+  async processDirectory(@Body() body: { directoryPath: string }): Promise<Array<{ filename: string; text: string; pages: number; chunks: number }>> { // Removed embedding from return type
     const directory = body.directoryPath;
     const files = fs.readdirSync(directory).filter(file => path.extname(file).toLowerCase() === '.pdf');
 

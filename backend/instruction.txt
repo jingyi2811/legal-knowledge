@@ -11,7 +11,7 @@ curl -X POST http://localhost:4000/embedding/upload \
 [/embedding/from-folder]
 curl -X POST http://localhost:4000/embedding/from-folder \
   -H "Content-Type: application/json" \
-  -d '{"filePath": "/Users/jimmy/WebstormProjects/legal-knowledge/backend/doc/pdf/a.pdf"}'
+  -d '{"filePath": "/Users/jimmy/WebstormProjects/legal-knowledge/backend/doc/pdf/b.pdf"}'
 
 [/embedding/process-directory]
 curl -X POST http://localhost:4000/embedding/process-directory \

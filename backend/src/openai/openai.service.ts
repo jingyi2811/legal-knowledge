@@ -29,7 +29,7 @@ export class OpenAIService implements OnModuleInit {
 
   async generateAnswer({ query, context, documents }): Promise<string> {
     this.logger.log(`Generating answer for query: ${query}`);
-    
+
     const prompt = `
 You are a legal expert assistant. Answer the following question based on the provided legal documents.
 
